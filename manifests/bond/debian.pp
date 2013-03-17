@@ -13,6 +13,7 @@ define network::bond::debian(
   $method    = undef,
   $family    = undef,
   $onboot    = undef,
+  $options   = {},
 
   $mode             = undef,
   $miimon           = undef,
@@ -24,7 +25,7 @@ define network::bond::debian(
   $xmit_hash_policy = undef,
 ) {
 
-  $raw = {
+  $raw_bond_opts = {
     'bond-slaves'    => join($slaves, ' '),
     'bond-mode'      => $mode,
     'bond-miimon'    => $miimon,
@@ -36,7 +37,9 @@ define network::bond::debian(
     'bond-xmit-hash-policy' => $xmit_hash_policy,
   }
 
-  $opts = compact_hash($raw)
+  $bond_opts = compact_hash($raw_bond_opts)
+
+  $options_real = merge($options, $bond_opts)
 
   network_config { $name:
     ensure    => $ensure,
@@ -45,7 +48,7 @@ define network::bond::debian(
     family    => $family,
     method    => $method,
     onboot    => $onboot,
-    options   => $opts,
+    options   => $options_real,
   }
 
   network_config { $slaves:

@@ -14,6 +14,7 @@ define network::bond::redhat(
   $method    = undef,
   $family    = undef,
   $onboot    = undef,
+  $options   = {},
 
   $mode             = undef,
   $miimon           = undef,
@@ -25,7 +26,10 @@ define network::bond::redhat(
   $xmit_hash_policy = undef,
 ) {
 
-  $bonding_opts = template("network/bond/opts-redhat.erb")
+  $bond_str = template("network/bond/opts-redhat.erb")
+  $bonding_opts = {'BONDING_OPTS' => $bond_str}
+
+  $options_real = merge($options, $bonding_opts)
 
   network_config { $name:
     ensure    => $ensure,
@@ -34,9 +38,7 @@ define network::bond::redhat(
     netmask   => $netmask,
     family    => $family,
     onboot    => $onboot,
-    options          => {
-      'BONDING_OPTS' => $bonding_opts,
-    }
+    options   => $options_real,
   }
 
   network_config { $slaves:

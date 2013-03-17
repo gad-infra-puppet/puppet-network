@@ -129,6 +129,7 @@ define network::bond(
   $method    = undef,
   $family    = undef,
   $onboot    = undef,
+  $options   = {},
 
   $mode             = "active-backup",
   $miimon           = "100",
@@ -157,6 +158,7 @@ define network::bond(
         method    => $method,
         family    => $family,
         onboot    => $onboot,
+        options   => $options,
 
         mode             => $mode,
         miimon           => $miimon,
@@ -179,6 +181,7 @@ define network::bond(
         family    => $family,
         method    => $method,
         onboot    => $onboot,
+        options   => $options,
 
         mode             => $mode,
         miimon           => $miimon,
